@@ -144,5 +144,5 @@ docker-compose up -d
 
 📬 Contact
 
-Made with ❤️ by [Your Name].
+Made with ❤️ by Vansh Mahajan.
 Feel free to contribute or raise issues!
