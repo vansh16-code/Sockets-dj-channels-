@@ -126,12 +126,11 @@
   <script>
     const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-    // Name Prompt with localStorage
-    let userName = localStorage.getItem('chatName') || '';
+    // Prompt user for name on every tab
+    let userName = '';
     while (!userName.trim()) {
-      userName = prompt("Enter your name:");
+      userName = prompt("Enter your name for this chat:");
     }
-    localStorage.setItem('chatName', userName);
 
     const chatSocket = new WebSocket(
       'ws://' + window.location.host + '/ws/chat/' + roomName + '/?name=' + encodeURIComponent(userName)
@@ -146,16 +145,17 @@
       if (data.message) {
         const msgDiv = document.createElement('div');
         msgDiv.classList.add('message');
+
         if (data.message.startsWith(userName + ":")) {
           msgDiv.classList.add('self');
         }
+
         msgDiv.textContent = data.message;
         chatBox.appendChild(msgDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
       }
 
       if (data.users) {
-        // Update user list
         userList.innerHTML = '';
         data.users.forEach(user => {
           const li = document.createElement('li');
@@ -165,7 +165,7 @@
       }
     };
 
-    chatSocket.onclose = function (e) {
+    chatSocket.onclose = function () {
       alert('Chat socket closed unexpectedly.');
     };
 
@@ -176,12 +176,12 @@
       }
     };
 
-    document.getElementById('chat-message-submit').onclick = function (e) {
-      const inputEl = document.getElementById('chat-message-input');
-      const message = inputEl.value;
+    document.getElementById('chat-message-submit').onclick = function () {
+      const inputField = document.getElementById('chat-message-input');
+      const message = inputField.value;
       if (message.trim() !== '') {
         chatSocket.send(JSON.stringify({ message: message }));
-        inputEl.value = '';
+        inputField.value = '';
       }
     };
   </script>
